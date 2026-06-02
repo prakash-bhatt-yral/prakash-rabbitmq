@@ -1,0 +1,13 @@
+name: deploy-rabbitmq
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Placeholder
+        run: |
+          echo "Deploy workflow placeholder."
+          echo "Wire this to the Prakash server SSH deploy flow before production use."

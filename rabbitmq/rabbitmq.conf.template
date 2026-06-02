@@ -1,0 +1,23 @@
+loopback_users.guest = false
+listeners.tcp = none
+listeners.ssl.default = 5671
+
+management.tcp.ip = 0.0.0.0
+management.tcp.port = 15672
+
+cluster_formation.peer_discovery_backend = classic_config
+cluster_formation.classic_config.nodes.1 = rabbit@prakash-1
+cluster_formation.classic_config.nodes.2 = rabbit@prakash-2
+cluster_formation.classic_config.nodes.3 = rabbit@prakash-3
+
+definitions.import_backend = local_filesystem
+definitions.local.path = /etc/rabbitmq/definitions.json
+definitions.skip_if_unchanged = true
+
+default_user = disabled
+default_pass = disabled
+
+ssl_options.certfile = /etc/rabbitmq/tls/tls.crt
+ssl_options.keyfile = /etc/rabbitmq/tls/tls.key
+ssl_options.verify = verify_none
+ssl_options.fail_if_no_peer_cert = false

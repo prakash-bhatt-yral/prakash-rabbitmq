@@ -1,0 +1,78 @@
+{
+  "vhosts": [
+    {
+      "name": "/videogen"
+    }
+  ],
+  "exchanges": [
+    {
+      "name": "videogen.jobs",
+      "vhost": "/videogen",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "videogen.jobs.dlx",
+      "vhost": "/videogen",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    }
+  ],
+  "queues": [
+    {
+      "name": "videogen.ltx.generate",
+      "vhost": "/videogen",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "quorum",
+        "x-dead-letter-exchange": "videogen.jobs.dlx"
+      }
+    },
+    {
+      "name": "videogen.ltx.generate.dlq",
+      "vhost": "/videogen",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "quorum"
+      }
+    }
+  ],
+  "bindings": [
+    {
+      "source": "videogen.jobs",
+      "vhost": "/videogen",
+      "destination": "videogen.ltx.generate",
+      "destination_type": "queue",
+      "routing_key": "ltx.generate",
+      "arguments": {}
+    },
+    {
+      "source": "videogen.jobs.dlx",
+      "vhost": "/videogen",
+      "destination": "videogen.ltx.generate.dlq",
+      "destination_type": "queue",
+      "routing_key": "ltx.generate",
+      "arguments": {}
+    }
+  ],
+  "policies": [
+    {
+      "name": "videogen-quorum",
+      "vhost": "/videogen",
+      "pattern": "^videogen\\.ltx\\.generate$",
+      "apply-to": "queues",
+      "definition": {
+        "queue-version": 2
+      },
+      "priority": 0
+    }
+  ]
+}
