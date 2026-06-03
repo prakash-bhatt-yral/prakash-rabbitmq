@@ -19,6 +19,7 @@ ensure_user() {
 }
 
 rabbitmqctl delete_user guest >/dev/null 2>&1 || true
+rabbitmqctl delete_user disabled >/dev/null 2>&1 || true
 
 ensure_user "prakash_videogen_publisher" "${RABBITMQ_PUBLISHER_PASSWORD:?}"
 ensure_user "vast_ltx_consumer" "${RABBITMQ_CONSUMER_PASSWORD:?}"

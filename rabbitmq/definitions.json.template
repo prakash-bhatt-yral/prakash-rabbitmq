@@ -32,6 +32,7 @@
       "auto_delete": false,
       "arguments": {
         "x-queue-type": "quorum",
+        "x-quorum-initial-group-size": 3,
         "x-dead-letter-exchange": "videogen.jobs.dlx"
       }
     },
@@ -41,7 +42,8 @@
       "durable": true,
       "auto_delete": false,
       "arguments": {
-        "x-queue-type": "quorum"
+        "x-queue-type": "quorum",
+        "x-quorum-initial-group-size": 3
       }
     }
   ],
