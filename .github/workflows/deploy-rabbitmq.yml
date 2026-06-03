@@ -37,7 +37,7 @@ jobs:
             ip: 138.201.129.173
             ssh_host: 138.201.129.173
     env:
-      DEPLOY_DIR: ~/prakash-rabbitmq
+      DEPLOY_DIR: /home/deploy/prakash-rabbitmq
       SERVER_1_IP: 94.130.13.115
       SERVER_2_IP: 88.99.151.102
       SERVER_3_IP: 138.201.129.173
@@ -90,6 +90,7 @@ jobs:
           set -a
           . /tmp/prakash-rabbitmq-node.env
           set +a
+          DEPLOY_DIR="${DEPLOY_DIR/#\~/${HOME}}"
           mkdir -p "${DEPLOY_DIR}"
           tar -xzf /tmp/prakash-rabbitmq.tar.gz -C "${DEPLOY_DIR}"
           cd "${DEPLOY_DIR}"
@@ -113,7 +114,7 @@ jobs:
     needs: deploy
     runs-on: ubuntu-latest
     env:
-      DEPLOY_DIR: ~/prakash-rabbitmq
+      DEPLOY_DIR: /home/deploy/prakash-rabbitmq
       TOPOLOGY_NODE_NAME: prakash-1
       TOPOLOGY_SSH_HOST: 94.130.13.115
       SERVER_1_IP: 94.130.13.115
@@ -154,6 +155,7 @@ jobs:
           set -a
           . /tmp/prakash-rabbitmq-topology.env
           set +a
+          DEPLOY_DIR="${DEPLOY_DIR/#\~/${HOME}}"
           cd "${DEPLOY_DIR}"
           rm -f /tmp/prakash-rabbitmq-topology.env
           bash scripts/apply-rabbitmq-topology.sh

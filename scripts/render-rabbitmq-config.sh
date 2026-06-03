@@ -16,4 +16,4 @@ decode_base64() {
 
 printf '%s' "${RABBITMQ_TLS_CERT_PEM_B64:?}" | decode_base64 > rabbitmq/runtime/tls/tls.crt
 printf '%s' "${RABBITMQ_TLS_KEY_PEM_B64:?}" | decode_base64 > rabbitmq/runtime/tls/tls.key
-chmod 600 rabbitmq/runtime/tls/tls.key
+chmod 644 rabbitmq/runtime/tls/tls.crt rabbitmq/runtime/tls/tls.key
