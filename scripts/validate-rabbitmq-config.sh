@@ -83,6 +83,10 @@ require_contains scripts/deploy-rabbitmq.sh 'SERVER_1_IP.*SERVER_1_IP is require
   'deploy must enforce required server IP env vars for firewall setup'
 require_contains scripts/deploy-rabbitmq.sh 'scripts/prepare-rabbitmq-data-volume\.sh' \
   'deploy must prepare RabbitMQ data volume ownership before compose up'
+require_contains scripts/deploy-rabbitmq.sh 'rabbitmq-diagnostics -q ping' \
+  'deploy must wait for RabbitMQ diagnostics ping after compose up'
+require_not_contains scripts/deploy-rabbitmq.sh 'rabbitmqctl await_startup' \
+  'deploy must not use one-shot rabbitmqctl await_startup before node registration'
 require_not_contains scripts/deploy-rabbitmq.sh 'RABBITMQ_PUBLISHER_PASSWORD' \
   'node deploy must not require application user passwords'
 require_contains scripts/apply-firewall.sh 'RABBITMQ_DIRECT_AMQPS_CLIENT_IPS' \
