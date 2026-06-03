@@ -9,9 +9,8 @@ services:
       RABBITMQ_CONFIG_FILE: "/etc/rabbitmq/rabbitmq"
       RABBITMQ_ENABLED_PLUGINS_FILE: "/etc/rabbitmq/enabled_plugins"
     extra_hosts:
-      - "prakash-1:${SERVER_1_IP:?SERVER_1_IP is required}"
-      - "prakash-2:${SERVER_2_IP:?SERVER_2_IP is required}"
-      - "prakash-3:${SERVER_3_IP:?SERVER_3_IP is required}"
+      - "${RABBITMQ_PEER_HOST_1:?RABBITMQ_PEER_HOST_1 is required}"
+      - "${RABBITMQ_PEER_HOST_2:?RABBITMQ_PEER_HOST_2 is required}"
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
       - ./runtime/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro

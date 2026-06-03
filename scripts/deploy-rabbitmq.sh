@@ -6,6 +6,8 @@ export NODE_IP="${NODE_IP:?NODE_IP is required}"
 export SERVER_1_IP="${SERVER_1_IP:?SERVER_1_IP is required}"
 export SERVER_2_IP="${SERVER_2_IP:?SERVER_2_IP is required}"
 export SERVER_3_IP="${SERVER_3_IP:?SERVER_3_IP is required}"
+export RABBITMQ_PEER_HOST_1="${RABBITMQ_PEER_HOST_1:?RABBITMQ_PEER_HOST_1 is required}"
+export RABBITMQ_PEER_HOST_2="${RABBITMQ_PEER_HOST_2:?RABBITMQ_PEER_HOST_2 is required}"
 export RABBITMQ_ERLANG_COOKIE="${RABBITMQ_ERLANG_COOKIE:?RABBITMQ_ERLANG_COOKIE is required}"
 export RABBITMQ_TLS_CERT_PEM_B64="${RABBITMQ_TLS_CERT_PEM_B64:?RABBITMQ_TLS_CERT_PEM_B64 is required}"
 export RABBITMQ_TLS_KEY_PEM_B64="${RABBITMQ_TLS_KEY_PEM_B64:?RABBITMQ_TLS_KEY_PEM_B64 is required}"
@@ -15,6 +17,7 @@ if [ "${SKIP_FIREWALL:-false}" != "true" ]; then
 fi
 
 bash scripts/render-rabbitmq-config.sh
+bash scripts/prepare-rabbitmq-data-volume.sh
 
 docker compose -f rabbitmq/docker-compose.rabbitmq.yml up -d --remove-orphans
 docker compose -f rabbitmq/docker-compose.rabbitmq.yml exec -T rabbitmq rabbitmqctl await_startup --timeout 300

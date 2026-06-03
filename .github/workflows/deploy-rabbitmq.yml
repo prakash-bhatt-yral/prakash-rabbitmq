@@ -12,6 +12,8 @@ jobs:
       SERVER_1_IP: 94.130.13.115
       SERVER_2_IP: 88.99.151.102
       SERVER_3_IP: 138.201.129.173
+      RABBITMQ_PEER_HOST_1: prakash-2:88.99.151.102
+      RABBITMQ_PEER_HOST_2: prakash-3:138.201.129.173
       RABBITMQ_ERLANG_COOKIE: dummy
     steps:
       - name: Check out repo
@@ -30,12 +32,18 @@ jobs:
           - name: prakash-1
             ip: 94.130.13.115
             ssh_host: 94.130.13.115
+            peer_host_1: prakash-2:88.99.151.102
+            peer_host_2: prakash-3:138.201.129.173
           - name: prakash-2
             ip: 88.99.151.102
             ssh_host: 88.99.151.102
+            peer_host_1: prakash-1:94.130.13.115
+            peer_host_2: prakash-3:138.201.129.173
           - name: prakash-3
             ip: 138.201.129.173
             ssh_host: 138.201.129.173
+            peer_host_1: prakash-1:94.130.13.115
+            peer_host_2: prakash-2:88.99.151.102
     env:
       DEPLOY_DIR: /home/deploy/prakash-rabbitmq
       SERVER_1_IP: 94.130.13.115
@@ -77,6 +85,8 @@ jobs:
             printf 'SERVER_1_IP=%q\n' "${SERVER_1_IP}"
             printf 'SERVER_2_IP=%q\n' "${SERVER_2_IP}"
             printf 'SERVER_3_IP=%q\n' "${SERVER_3_IP}"
+            printf 'RABBITMQ_PEER_HOST_1=%q\n' "${RABBITMQ_PEER_HOST_1}"
+            printf 'RABBITMQ_PEER_HOST_2=%q\n' "${RABBITMQ_PEER_HOST_2}"
             printf 'RABBITMQ_DIRECT_AMQPS_CLIENT_IPS=%q\n' "${RABBITMQ_DIRECT_AMQPS_CLIENT_IPS}"
             printf 'RABBITMQ_ERLANG_COOKIE=%q\n' "${RABBITMQ_ERLANG_COOKIE}"
             printf 'RABBITMQ_TLS_CERT_PEM_B64=%q\n' "${RABBITMQ_TLS_CERT_PEM_B64}"
@@ -104,6 +114,8 @@ jobs:
           SERVER_1_IP: ${{ env.SERVER_1_IP }}
           SERVER_2_IP: ${{ env.SERVER_2_IP }}
           SERVER_3_IP: ${{ env.SERVER_3_IP }}
+          RABBITMQ_PEER_HOST_1: ${{ matrix.node.peer_host_1 }}
+          RABBITMQ_PEER_HOST_2: ${{ matrix.node.peer_host_2 }}
           RABBITMQ_DIRECT_AMQPS_CLIENT_IPS: ${{ vars.RABBITMQ_DIRECT_AMQPS_CLIENT_IPS }}
           RABBITMQ_DEPLOY_USER: ${{ secrets.RABBITMQ_DEPLOY_USER }}
           RABBITMQ_ERLANG_COOKIE: ${{ secrets.RABBITMQ_ERLANG_COOKIE }}
@@ -120,6 +132,8 @@ jobs:
       SERVER_1_IP: 94.130.13.115
       SERVER_2_IP: 88.99.151.102
       SERVER_3_IP: 138.201.129.173
+      RABBITMQ_PEER_HOST_1: prakash-2:88.99.151.102
+      RABBITMQ_PEER_HOST_2: prakash-3:138.201.129.173
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
@@ -142,6 +156,8 @@ jobs:
             printf 'SERVER_1_IP=%q\n' "${SERVER_1_IP}"
             printf 'SERVER_2_IP=%q\n' "${SERVER_2_IP}"
             printf 'SERVER_3_IP=%q\n' "${SERVER_3_IP}"
+            printf 'RABBITMQ_PEER_HOST_1=%q\n' "${RABBITMQ_PEER_HOST_1}"
+            printf 'RABBITMQ_PEER_HOST_2=%q\n' "${RABBITMQ_PEER_HOST_2}"
             printf 'RABBITMQ_ERLANG_COOKIE=%q\n' "${RABBITMQ_ERLANG_COOKIE}"
             printf 'RABBITMQ_PUBLISHER_PASSWORD=%q\n' "${RABBITMQ_PUBLISHER_PASSWORD}"
             printf 'RABBITMQ_CONSUMER_PASSWORD=%q\n' "${RABBITMQ_CONSUMER_PASSWORD}"

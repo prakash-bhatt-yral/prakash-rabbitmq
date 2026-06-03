@@ -79,6 +79,8 @@ NODE_IP=94.130.13.115 \
 SERVER_1_IP=94.130.13.115 \
 SERVER_2_IP=88.99.151.102 \
 SERVER_3_IP=138.201.129.173 \
+RABBITMQ_PEER_HOST_1=prakash-2:88.99.151.102 \
+RABBITMQ_PEER_HOST_2=prakash-3:138.201.129.173 \
 RABBITMQ_ERLANG_COOKIE=<shared-cookie> \
 RABBITMQ_TLS_CERT_PEM_B64=<base64-pem-cert> \
 RABBITMQ_TLS_KEY_PEM_B64=<base64-pem-key> \
@@ -86,7 +88,10 @@ RABBITMQ_DIRECT_AMQPS_CLIENT_IPS="<space-separated-prakash-api-server-ips>" \
 bash scripts/deploy-rabbitmq.sh
 ```
 
-Repeat on `prakash-2` and `prakash-3`.
+Repeat on `prakash-2` and `prakash-3`, changing `NODE_NAME`, `NODE_IP`, and
+the two `RABBITMQ_PEER_HOST_*` values so each node maps only its two peers.
+Do not map a node's own hostname to its public IP inside that node; RabbitMQ
+needs the local nodename to resolve to the local container for epmd.
 
 After all three nodes are running, apply definitions and users once from any
 cluster node:
@@ -96,6 +101,8 @@ NODE_NAME=prakash-1 \
 SERVER_1_IP=94.130.13.115 \
 SERVER_2_IP=88.99.151.102 \
 SERVER_3_IP=138.201.129.173 \
+RABBITMQ_PEER_HOST_1=prakash-2:88.99.151.102 \
+RABBITMQ_PEER_HOST_2=prakash-3:138.201.129.173 \
 RABBITMQ_ERLANG_COOKIE=<shared-cookie> \
 RABBITMQ_PUBLISHER_PASSWORD=<secret> \
 RABBITMQ_CONSUMER_PASSWORD=<secret> \

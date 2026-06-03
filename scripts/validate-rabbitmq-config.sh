@@ -30,6 +30,7 @@ bash -n \
   scripts/deploy-rabbitmq.sh \
   scripts/apply-rabbitmq-topology.sh \
   scripts/configure-rabbitmq-users.sh \
+  scripts/prepare-rabbitmq-data-volume.sh \
   scripts/write-deploy-ssh-key.sh \
   scripts/render-rabbitmq-config.sh
 bash -n scripts/apply-firewall.sh
@@ -44,6 +45,8 @@ NODE_IP=94.130.13.115 \
 SERVER_1_IP=94.130.13.115 \
 SERVER_2_IP=88.99.151.102 \
 SERVER_3_IP=138.201.129.173 \
+RABBITMQ_PEER_HOST_1=prakash-2:88.99.151.102 \
+RABBITMQ_PEER_HOST_2=prakash-3:138.201.129.173 \
 RABBITMQ_ERLANG_COOKIE=dummy \
 docker compose -f rabbitmq/docker-compose.rabbitmq.yml config --quiet
 
@@ -60,10 +63,14 @@ require_not_contains rabbitmq/docker-compose.rabbitmq.yml 'privileged:[[:space:]
   'compose must not run a privileged firewall sidecar'
 require_contains rabbitmq/docker-compose.rabbitmq.yml '127\.0\.0\.1:15672:15672' \
   'management UI must only publish on host loopback'
-require_contains rabbitmq/docker-compose.rabbitmq.yml '\$\{SERVER_1_IP:\?' \
-  'compose must enforce required server IP env vars'
 require_contains rabbitmq/docker-compose.rabbitmq.yml '\$\{RABBITMQ_ERLANG_COOKIE:\?' \
   'compose must enforce required Erlang cookie env var'
+require_contains rabbitmq/docker-compose.rabbitmq.yml '\$\{RABBITMQ_PEER_HOST_1:\?' \
+  'compose must require a first peer host mapping'
+require_contains rabbitmq/docker-compose.rabbitmq.yml '\$\{RABBITMQ_PEER_HOST_2:\?' \
+  'compose must require a second peer host mapping'
+require_not_contains rabbitmq/docker-compose.rabbitmq.yml '"prakash-1:\$\{SERVER_1_IP' \
+  'compose must not map the local node name to its public IP on every node'
 
 require_contains scripts/configure-rabbitmq-users.sh 'change_password "\$\{user\}" "\$\{password\}"' \
   'existing user passwords must be rotated with rabbitmqctl change_password'
@@ -72,6 +79,10 @@ require_contains scripts/configure-rabbitmq-users.sh 'add_user "\$\{user\}" "\$\
 
 require_contains scripts/deploy-rabbitmq.sh 'scripts/apply-firewall\.sh' \
   'deploy must apply host firewall before compose up'
+require_contains scripts/deploy-rabbitmq.sh 'SERVER_1_IP.*SERVER_1_IP is required' \
+  'deploy must enforce required server IP env vars for firewall setup'
+require_contains scripts/deploy-rabbitmq.sh 'scripts/prepare-rabbitmq-data-volume\.sh' \
+  'deploy must prepare RabbitMQ data volume ownership before compose up'
 require_not_contains scripts/deploy-rabbitmq.sh 'RABBITMQ_PUBLISHER_PASSWORD' \
   'node deploy must not require application user passwords'
 require_contains scripts/apply-firewall.sh 'RABBITMQ_DIRECT_AMQPS_CLIENT_IPS' \
