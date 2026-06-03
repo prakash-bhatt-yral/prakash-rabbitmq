@@ -48,9 +48,7 @@ jobs:
       - name: Configure SSH
         run: |
           set -euo pipefail
-          mkdir -p ~/.ssh
-          printf '%s\n' "${RABBITMQ_DEPLOY_SSH_KEY}" > ~/.ssh/rabbitmq_deploy
-          chmod 600 ~/.ssh/rabbitmq_deploy
+          bash scripts/write-deploy-ssh-key.sh ~/.ssh/rabbitmq_deploy
           ssh-keyscan -H "${SSH_HOST}" >> ~/.ssh/known_hosts
         env:
           SSH_HOST: ${{ matrix.node.ssh_host }}
@@ -122,12 +120,13 @@ jobs:
       SERVER_2_IP: 88.99.151.102
       SERVER_3_IP: 138.201.129.173
     steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
       - name: Configure SSH
         run: |
           set -euo pipefail
-          mkdir -p ~/.ssh
-          printf '%s\n' "${RABBITMQ_DEPLOY_SSH_KEY}" > ~/.ssh/rabbitmq_deploy
-          chmod 600 ~/.ssh/rabbitmq_deploy
+          bash scripts/write-deploy-ssh-key.sh ~/.ssh/rabbitmq_deploy
           ssh-keyscan -H "${TOPOLOGY_SSH_HOST}" >> ~/.ssh/known_hosts
         env:
           RABBITMQ_DEPLOY_SSH_KEY: ${{ secrets.RABBITMQ_DEPLOY_SSH_KEY }}

@@ -156,6 +156,11 @@ The manual deploy workflow expects these secrets:
 - `RABBITMQ_CONSUMER_PASSWORD`
 - `RABBITMQ_ADMIN_PASSWORD`
 
+`RABBITMQ_DEPLOY_SSH_KEY` must be the unencrypted private key for
+`RABBITMQ_DEPLOY_USER`, not the public key. The deploy workflow accepts the
+private key as raw multiline text, escaped-newline text, or base64-encoded text,
+and validates it before running `scp` or `ssh`.
+
 It also reads optional repository variables:
 
 - `RABBITMQ_DIRECT_AMQPS_CLIENT_IPS`: Prakash API server IPs that publish

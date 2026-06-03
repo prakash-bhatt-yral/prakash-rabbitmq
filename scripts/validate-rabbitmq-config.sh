@@ -30,6 +30,7 @@ bash -n \
   scripts/deploy-rabbitmq.sh \
   scripts/apply-rabbitmq-topology.sh \
   scripts/configure-rabbitmq-users.sh \
+  scripts/write-deploy-ssh-key.sh \
   scripts/render-rabbitmq-config.sh
 bash -n scripts/apply-firewall.sh
 
@@ -112,6 +113,8 @@ require_contains .github/workflows/deploy-rabbitmq.yml 'needs: deploy' \
   'topology job must wait for all matrix deploys'
 require_contains .github/workflows/deploy-rabbitmq.yml 'bash -se' \
   'deploy workflow SSH commands must explicitly run remote bash'
+require_contains .github/workflows/deploy-rabbitmq.yml 'scripts/write-deploy-ssh-key\.sh' \
+  'deploy workflow must normalize and validate the SSH private key before scp'
 require_contains .github/workflows/validate-rabbitmq.yml 'pull_request:' \
   'validation workflow must run on pull requests'
 require_contains .github/workflows/validate-rabbitmq.yml 'shellcheck' \
